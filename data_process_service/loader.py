@@ -13,10 +13,11 @@ class Loader(object):
 
     def __init__(self, flags_obj):
 
-        self.name = flags_obj.name
+        self.name = flags_obj.name + '_loader'
         self.load_path = flags_obj.load_path
         self.save_path = flags_obj.save_path
-        self.check_save_path()
+        if not flags_obj.test:
+            self.check_save_path()
     
     def check_save_path(self):
 
