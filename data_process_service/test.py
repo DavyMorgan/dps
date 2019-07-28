@@ -10,7 +10,8 @@ from absl import flags
 import pandas as pd
 
 import loader as LOADER
-import filter as FILTER
+import rek_filter as FILTER
+import reindexer as REINDEXER
 
 
 FLAGS = flags.FLAGS
@@ -38,13 +39,27 @@ def test_csvloader(flags_obj):
 def test_cffilter(flags_obj):
 
     record = pd.DataFrame({'uid': [1,2,2,3,3,3,4,4,4,4], 'iid': [1,2,2,3,3,3,4,4,4,4]})
-    filter = FILTER.CFFilter(flags_obj, record)
+    rek_filter = FILTER.CFFilter(flags_obj, record)
     print(record.head(10))
     print('{} records before filter!'.format(len(record)))
 
-    record = filter.filter_user_k_core(record, 2)
+    record = rek_filter.filter_user_k_core(record, 2)
     print(record.head(10))
     print('{} records after filter!'.format(len(record)))
+
+
+def test_reindexer(flags_obj):
+
+    record = pd.DataFrame({'uid': [2,2,4,4,4,4], 'iid': [5,6,7,8,9,10]})
+    reindexer = REINDEXER.Reindexer(flags_obj)
+    print(record.head(10))
+    print('data frames before reindex!')
+
+    reindexer.reindex_user(record)
+    reindexer.reindex_item(record)
+
+    print(record.head(10))
+    print('data frames after reindex!')
 
 
 def main(argv):
@@ -52,7 +67,8 @@ def main(argv):
     flags_obj = flags.FLAGS
 
     #test_csvloader(flags_obj)
-    test_cffilter(flags_obj)
+    #test_cffilter(flags_obj)
+    test_reindexer(flags_obj)
 
 
 if __name__ == "__main__":
