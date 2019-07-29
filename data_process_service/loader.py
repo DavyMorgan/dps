@@ -27,7 +27,7 @@ class Loader(object):
     
     def load_file(self, filename, argu_dict):
 
-        pass
+        raise NotImplementedError
 
 
 class CSVLoader(Loader):

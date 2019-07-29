@@ -16,7 +16,7 @@ class Filter(object):
     
     def check_columns(self, record):
 
-        pass
+        raise NotImplementedError
 
 
 class CFFilter(Filter):
