@@ -19,6 +19,7 @@ import splitter as SPLITTER
 import generator as GENERATOR
 import saver as SAVER
 import transformer as TRANSFORMER
+import sampler as SAMPLER
 
 
 FLAGS = flags.FLAGS
@@ -151,7 +152,7 @@ def test_dokgenerator(flags_obj):
 
     for (u, i) in dok_record.keys():
 
-        print('{} {}'.format(u, i ))
+        print('{} {}'.format(u, i))
     
     print('dok record!')
 
@@ -196,6 +197,32 @@ def test_sparsetransformer(flags_obj):
         print('Transform coo to dok Success!')
 
 
+def test_pointsampler(flags_obj):
+
+    record = sp.coo_matrix(([1,1,1,1,1], ([0,1,2,3,4], [0,1,2,3,4])), shape=(5, 5))
+    lil_record = record.tolil()
+    dok_record = record.todok()
+    neg_sample_rate = 2
+
+    sampler = SAMPLER.PointSampler(flags_obj, lil_record, dok_record, neg_sample_rate)
+
+    for (u, i) in dok_record.keys():
+
+        print('{} {}'.format(u, i))
+    
+    print('dok record!')
+
+    n_record = len(dok_record.keys())
+    for index in range(n_record):
+
+        users, items, labels = sampler.sample(index)
+        print('sample {}'.format(index))
+        for i in range(len(users)):
+            print('{} {} {}'.format(users[i], items[i], labels[i]))
+    
+    print('Finish Sampling!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -209,7 +236,8 @@ def main(argv):
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
     #test_cooio(flags_obj)
-    test_sparsetransformer(flags_obj)
+    #test_sparsetransformer(flags_obj)
+    test_pointsampler(flags_obj)
 
 
 if __name__ == "__main__":
