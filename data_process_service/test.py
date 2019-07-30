@@ -223,6 +223,32 @@ def test_pointsampler(flags_obj):
     print('Finish Sampling!')
 
 
+def test_pairsampler(flags_obj):
+
+    record = sp.coo_matrix(([1,1,1,1,1], ([0,1,2,3,4], [0,1,2,3,4])), shape=(5, 5))
+    lil_record = record.tolil()
+    dok_record = record.todok()
+    neg_sample_rate = 2
+
+    sampler = SAMPLER.PairSampler(flags_obj, lil_record, dok_record, neg_sample_rate)
+
+    for (u, i) in dok_record.keys():
+
+        print('{} {}'.format(u, i))
+    
+    print('dok record!')
+
+    n_record = len(dok_record.keys())
+    for index in range(n_record):
+
+        users, items_pos, items_neg = sampler.sample(index)
+        print('sample {}'.format(index))
+        for i in range(len(users)):
+            print('{} {} {}'.format(users[i], items_pos[i], items_neg[i]))
+    
+    print('Finish Sampling!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -237,7 +263,8 @@ def main(argv):
     #test_dokgenerator(flags_obj)
     #test_cooio(flags_obj)
     #test_sparsetransformer(flags_obj)
-    test_pointsampler(flags_obj)
+    #test_pointsampler(flags_obj)
+    test_pairsampler(flags_obj)
 
 
 if __name__ == "__main__":
