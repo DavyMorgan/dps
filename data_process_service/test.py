@@ -18,6 +18,7 @@ import reindexer as REINDEXER
 import splitter as SPLITTER
 import generator as GENERATOR
 import saver as SAVER
+import transformer as TRANSFORMER
 
 
 FLAGS = flags.FLAGS
@@ -177,6 +178,24 @@ def test_cooio(flags_obj):
         print('Matrix Saved not consistent with Matrix Loaded!')
 
 
+def test_sparsetransformer(flags_obj):
+
+    record = sp.coo_matrix(([1,1,1], ([0,1,2], [0,1,2])), shape=(3, 3))
+    tranformer = TRANSFORMER.SparseTransformer(flags_obj)
+    
+    lil_record = record.tolil()
+    my_lil_record = tranformer.coo2lil(record)
+    nnz = (lil_record != my_lil_record).nnz
+    if nnz == 0:
+        print('Transform coo to lil Success!')
+    
+    dok_record = record.todok()
+    my_dok_record = tranformer.coo2dok(record)
+    nnz = (dok_record != my_dok_record).nnz
+    if nnz == 0:
+        print('Transform coo to dok Success!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -189,7 +208,8 @@ def main(argv):
     #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
-    test_cooio(flags_obj)
+    #test_cooio(flags_obj)
+    test_sparsetransformer(flags_obj)
 
 
 if __name__ == "__main__":
