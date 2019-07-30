@@ -5,6 +5,7 @@
 #pylint: disable=import-error
 
 import pandas as pd
+import scipy.sparse as sp
 
 import os
 
@@ -48,4 +49,5 @@ class COOLoader(Loader):
     
     def load_file(self, filename, **kwargs):
 
-        pass
+        filename = os.path.join(self.load_path, filename)
+        self.record = sp.load_npz(filename)
