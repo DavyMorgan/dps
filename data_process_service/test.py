@@ -8,12 +8,16 @@ from absl import app
 from absl import flags
 
 import pandas as pd
+import scipy.sparse as sp
+
+import os
 
 import loader as LOADER
 import rek_filter as FILTER
 import reindexer as REINDEXER
 import splitter as SPLITTER
 import generator as GENERATOR
+import saver as SAVER
 
 
 FLAGS = flags.FLAGS
@@ -151,11 +155,33 @@ def test_dokgenerator(flags_obj):
     print('dok record!')
 
 
+def test_cooio(flags_obj):
+
+    record = sp.coo_matrix(([1,1,1], ([0,1,2], [0,1,2])), shape=(3, 3))
+    saver = SAVER.COOSaver(flags_obj)
+    loader = LOADER.COOLoader(flags_obj)
+
+    filename = 'test_cooio.npz'
+    saver.save_file(filename, record)
+    loader.load_file(filename)
+    record_reload = loader.record
+
+    nnz = (record != record_reload).nnz
+    if nnz == 0:
+
+        print('Save and Load Success!')
+        os.remove(os.path.join(flags_obj.save_path, filename))
+    
+    else:
+
+        print('Matrix Saved not consistent with Matrix Loaded!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
 
-    test_csvloader(flags_obj)
+    #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
@@ -163,6 +189,7 @@ def main(argv):
     #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
+    test_cooio(flags_obj)
 
 
 if __name__ == "__main__":
