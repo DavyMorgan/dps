@@ -108,6 +108,21 @@ def test_percentagesplitter(flags_obj):
     print('test split!')
 
 
+def test_coogenerator(flags_obj):
+
+    record = pd.DataFrame({'uid': [0,0,0,1,1,1,1], 'iid': [0,1,2,3,4,5,6], 'ts': [1,2,3,4,5,6,7]})
+    generator = GENERATOR.CooGenerator(flags_obj)
+
+    print(record.head(10))
+    print('original record!')
+
+    coo_record = generator.generate(record)
+
+    print('row: \t{}'.format(coo_record.row))
+    print('col: \t{}'.format(coo_record.col))
+    print('coo record!')
+
+
 def test_lilgenerator(flags_obj):
 
     record = pd.DataFrame({'uid': [0,0,0,1,1,1,1], 'iid': [0,1,2,3,4,5,6], 'ts': [1,2,3,4,5,6,7]})
@@ -123,6 +138,23 @@ def test_lilgenerator(flags_obj):
     print('lil record!')
 
 
+def test_dokgenerator(flags_obj):
+
+    record = pd.DataFrame({'uid': [0,0,0,1,1,1,1], 'iid': [0,1,2,3,4,5,6], 'ts': [1,2,3,4,5,6,7]})
+    generator = GENERATOR.DokGenerator(flags_obj)
+
+    print(record.head(10))
+    print('original record!')
+
+    dok_record = generator.generate(record)
+
+    for (u, i) in dok_record.keys():
+
+        print('{} {}'.format(u, i ))
+    
+    print('dok record!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -132,7 +164,9 @@ def main(argv):
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
-    test_lilgenerator(flags_obj)
+    test_coogenerator(flags_obj)
+    #test_lilgenerator(flags_obj)
+    #test_dokgenerator(flags_obj)
 
 
 if __name__ == "__main__":
