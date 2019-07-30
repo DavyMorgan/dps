@@ -13,6 +13,7 @@ import loader as LOADER
 import rek_filter as FILTER
 import reindexer as REINDEXER
 import splitter as SPLITTER
+import generator as GENERATOR
 
 
 FLAGS = flags.FLAGS
@@ -106,6 +107,22 @@ def test_percentagesplitter(flags_obj):
     print(splitter.test_record.head(10))
     print('test split!')
 
+
+def test_lilgenerator(flags_obj):
+
+    record = pd.DataFrame({'uid': [0,0,0,1,1,1,1], 'iid': [0,1,2,3,4,5,6], 'ts': [1,2,3,4,5,6,7]})
+    generator = GENERATOR.LilGenerator(flags_obj)
+
+    print(record.head(10))
+    print('original record!')
+
+    lil_record = generator.generate(record)
+
+    print('user 0: {}'.format(lil_record.rows[0]))
+    print('user 1: {}'.format(lil_record.rows[1]))
+    print('lil record!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -114,7 +131,8 @@ def main(argv):
     #test_cffilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
-    test_percentagesplitter(flags_obj)
+    #test_percentagesplitter(flags_obj)
+    test_lilgenerator(flags_obj)
 
 
 if __name__ == "__main__":
