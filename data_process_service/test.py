@@ -13,7 +13,7 @@ import scipy.sparse as sp
 import os
 
 import loader as LOADER
-import rek_filter as FILTER
+import filter as FILTER
 import reindexer as REINDEXER
 import splitter as SPLITTER
 import generator as GENERATOR
@@ -254,7 +254,7 @@ def main(argv):
     flags_obj = flags.FLAGS
 
     #test_csvloader(flags_obj)
-    #test_cffilter(flags_obj)
+    test_cffilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
@@ -264,7 +264,7 @@ def main(argv):
     #test_cooio(flags_obj)
     #test_sparsetransformer(flags_obj)
     #test_pointsampler(flags_obj)
-    test_pairsampler(flags_obj)
+    #test_pairsampler(flags_obj)
 
 
 if __name__ == "__main__":
