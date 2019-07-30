@@ -15,17 +15,15 @@ class Loader(object):
 
         self.name = flags_obj.name + '_loader'
         self.load_path = flags_obj.load_path
-        self.save_path = flags_obj.save_path
-        if not flags_obj.test:
-            self.check_save_path()
+        self.check_load_path()
     
-    def check_save_path(self):
+    def check_load_path(self):
 
-        if not os.path.exists(self.save_path):
+        if not os.path.exists(self.load_path):
 
-            os.mkdir(self.save_path)
+            print('Error! Load path ({}) does not exist!'.format(self.load_path))
     
-    def load_file(self, filename, argu_dict):
+    def load_file(self, filename, **kwargs):
 
         raise NotImplementedError
 
@@ -36,8 +34,18 @@ class CSVLoader(Loader):
 
         super(CSVLoader, self).__init__(flags_obj)
     
-    def load_file(self, filename, argu_dict):
+    def load_file(self, filename, **kwargs):
 
-        argu_dict['filepath_or_buffer'] = filename
-        self.record = pd.read_csv(**argu_dict)
+        filename = os.path.join(self.load_path, filename)
+        self.record = pd.read_csv(filename, **kwargs)
 
+
+class COOLoader(Loader):
+
+    def __init__(self, flags_obj):
+
+        super(COOLoader, self).__init__(flags_obj)
+    
+    def load_file(self, filename, **kwargs):
+
+        pass

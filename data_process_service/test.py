@@ -20,19 +20,15 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_string('name', 'test', 'Test name.')
 flags.DEFINE_bool('test', True, 'Whether in test mode.')
-flags.DEFINE_string('load_path', '', 'Path to load file.')
-flags.DEFINE_string('save_path', '', 'Path to save file.')
+flags.DEFINE_string('load_path', '/home/zhengyu/data/taobao', 'Path to load file.')
+flags.DEFINE_string('save_path', '/home/zhengyu/data/taobao', 'Path to save file.')
 
 
 def test_csvloader(flags_obj):
 
     loader = LOADER.CSVLoader(flags_obj)
-    filename = '/home/zhengyu/data/taobao/UserBehavior.csv'
-    argu_dict = {
-        'header': None,
-        'names': ['uid', 'iid', 'cid', 'behavior', 'ts']
-    }
-    loader.load_file(filename, argu_dict)
+    filename = 'UserBehavior.csv'
+    loader.load_file(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
     loader.record.info()
 
     return loader.record
@@ -159,12 +155,12 @@ def main(argv):
 
     flags_obj = flags.FLAGS
 
-    #test_csvloader(flags_obj)
+    test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
-    test_coogenerator(flags_obj)
+    #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
 
