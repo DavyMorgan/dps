@@ -26,7 +26,6 @@ class Splitter(object):
     def split(self, record, splits):
 
         record = self.rank(record)
-        print(record.head(10))
         self.split_core(record, splits)
         self.drop_rank_and_reset_index()
     
