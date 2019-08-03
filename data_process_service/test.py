@@ -43,13 +43,25 @@ def test_csvloader(flags_obj):
 def test_cffilter(flags_obj):
 
     record = pd.DataFrame({'uid': [1,2,2,3,3,3,4,4,4,4], 'iid': [1,2,2,3,3,3,4,4,4,4]})
-    rek_filter = FILTER.CFFilter(flags_obj, record)
+    cf_filter = FILTER.CFFilter(flags_obj, record)
     print(record.head(10))
     print('{} records before filter!'.format(len(record)))
 
-    record = rek_filter.filter_user_k_core(record, 2)
+    record = cf_filter.filter_user_k_core(record, 2)
     print(record.head(10))
     print('{} records after filter!'.format(len(record)))
+
+
+def test_duplicationfilter(flags_obj):
+
+    record = pd.DataFrame({'uid': [3,3,3,4,4,4,4], 'iid': [5,5,5,6,6,7,7], 'ts': [3,2,1,1,2,2,1]})
+    duplication_filter = FILTER.DuplicationFilter(flags_obj, record)
+    print(record.head(10))
+    print('records before filter!')
+
+    record = duplication_filter.filter(record)
+    print(record.head(10))
+    print('records after filter!')
 
 
 def test_reindexer(flags_obj):
@@ -254,7 +266,8 @@ def main(argv):
     flags_obj = flags.FLAGS
 
     #test_csvloader(flags_obj)
-    test_cffilter(flags_obj)
+    #test_cffilter(flags_obj)
+    test_duplicationfilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
