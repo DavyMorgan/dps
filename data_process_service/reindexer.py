@@ -24,7 +24,9 @@ class Reindexer(object):
     def reindex_user(self, record):
 
         self.reindex_core(record, 'uid')
+        return record
     
     def reindex_item(self, record):
 
         self.reindex_core(record, 'iid')
+        return record
