@@ -6,17 +6,35 @@
 
 import pandas as pd
 
+import sys
+
 
 class Filter(object):
 
     def __init__(self, flags_obj, record):
 
         self.name = flags_obj.name + '_filter'
-        self.check_columns(record)
+        if not self.check(record):
+            print('DataFrame column check failed!')
+            sys.exit()
     
-    def check_columns(self, record):
+    def check(self, record):
 
         raise NotImplementedError
+    
+    def check_columns(self, record, columns):
+
+        for column in columns:
+
+            if column not in record.columns:
+
+                return False
+        
+        return True
+    
+    def check_column(self, record, column):
+
+        return column in record.columns
 
 
 class CFFilter(Filter):
@@ -25,11 +43,9 @@ class CFFilter(Filter):
 
         super(CFFilter, self).__init__(flags_obj, record)
     
-    def check_columns(self, record):
+    def check(self, record):
 
-        if 'uid' not in record.columns or 'iid' not in record.columns:
-
-            print('columns must contain uid and iid!') 
+        return self.check_columns(record, ['uid', 'iid'])
     
     def filter_k_core(self, record, k_core, filtered_column, count_column):
 
@@ -53,3 +69,21 @@ class CFFilter(Filter):
     def filter_item_k_core(self, record, k_core):
 
         return self.filter_k_core(record, k_core, 'iid', 'uid')
+
+
+class DuplicationFilter(Filter):
+
+    def __init__(self, flags_obj, record):
+
+        super(DuplicationFilter, self).__init__(flags_obj, record)
+    
+    def check(self, record):
+
+        return self.check_columns(record, ['uid', 'iid', 'ts'])
+    
+    def filter(self, record):
+
+        record['rank'] = record['ts'].groupby([record['uid'], record['iid']]).rank(method='first')
+        record = record[record['rank']==1].drop(columns=['rank']).reset_index(drop=True)
+
+        return record
