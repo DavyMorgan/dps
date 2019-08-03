@@ -83,7 +83,6 @@ class DuplicationFilter(Filter):
     
     def filter(self, record):
 
-        record['rank'] = record['ts'].groupby([record['uid'], record['iid']]).rank(method='first')
-        record = record[record['rank']==1].drop(columns=['rank']).reset_index(drop=True)
+        record = record.sort_values('ts').drop_duplicates(['uid', 'iid']).reset_index(drop=True)
 
         return record
