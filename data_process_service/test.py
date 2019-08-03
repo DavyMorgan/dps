@@ -71,8 +71,8 @@ def test_reindexer(flags_obj):
     print(record.head(10))
     print('data frames before reindex!')
 
-    reindexer.reindex_user(record)
-    reindexer.reindex_item(record)
+    record = reindexer.reindex_user(record)
+    record = reindexer.reindex_item(record)
 
     print(record.head(10))
     print('data frames after reindex!')
@@ -267,8 +267,8 @@ def main(argv):
 
     #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
-    test_duplicationfilter(flags_obj)
-    #test_reindexer(flags_obj)
+    #test_duplicationfilter(flags_obj)
+    test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
     #test_coogenerator(flags_obj)
