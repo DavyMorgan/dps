@@ -15,15 +15,23 @@ class Generator(object):
 
         self.name = flags_obj.name + '_generator'
     
-    def generate(self, record):
+    def generate(self, record, **kwargs):
 
         raise NotImplementedError
     
-    def stat(self, record):
+    def stat(self, record, **kwargs):
 
         self.n_record = len(record)
-        self.n_user = record['uid'].nunique()
-        self.n_item = record['iid'].nunique()
+
+        if 'n_user' in kwargs:
+            self.n_user = kwargs['n_user']
+        else:
+            self.n_user = record['uid'].nunique()
+        
+        if 'n_item' in kwargs:
+            self.n_item = kwargs['n_item']
+        else:
+            self.n_item = record['iid'].nunique()
 
 
 class SparseGenerator(Generator):
@@ -32,13 +40,13 @@ class SparseGenerator(Generator):
 
         super(SparseGenerator, self).__init__(flags_obj)
     
-    def generate(self, record):
+    def generate(self, record, **kwargs):
 
         raise NotImplementedError
     
-    def generate_coo(self, record):
+    def generate_coo(self, record, **kwargs):
 
-        self.stat(record)
+        self.stat(record, **kwargs)
 
         values = np.ones(self.n_record)
         users = record['uid'].to_numpy()
@@ -54,9 +62,9 @@ class CooGenerator(SparseGenerator):
 
         super(CooGenerator, self).__init__(flags_obj)
 
-    def generate(self, record):
+    def generate(self, record, **kwargs):
 
-        coo_record = self.generate_coo(record)
+        coo_record = self.generate_coo(record, **kwargs)
 
         return coo_record
 
@@ -67,9 +75,9 @@ class LilGenerator(SparseGenerator):
 
         super(LilGenerator, self).__init__(flags_obj)
     
-    def generate(self, record):
+    def generate(self, record, **kwargs):
 
-        lil_record = self.generate_coo(record).tolil()
+        lil_record = self.generate_coo(record, **kwargs).tolil()
 
         return lil_record
 
@@ -80,8 +88,8 @@ class DokGenerator(SparseGenerator):
 
         super(DokGenerator, self).__init__(flags_obj)
     
-    def generate(self, record):
+    def generate(self, record, **kwargs):
 
-        dok_record = self.generate_coo(record).todok()
+        dok_record = self.generate_coo(record, **kwargs).todok()
 
         return dok_record
