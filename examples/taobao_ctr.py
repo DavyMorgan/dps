@@ -82,10 +82,10 @@ def split_taobao_ctr(flags_obj, record):
     return splitter.train_record, splitter.val_record, splitter.test_record
 
 
-def generate_coo_taobao_ctr(flags_obj, record):
+def generate_coo_taobao_ctr(flags_obj, record, **kwargs):
 
     generator = GENERATOR.CooGenerator(flags_obj)
-    coo_record = generator.generate(record)
+    coo_record = generator.generate(record, **kwargs)
 
     return coo_record
 
@@ -128,7 +128,9 @@ def test_taobao_ctr(flags_obj):
     print('split time: {:.2f} s'.format(split_time))
 
     start_time = time.time()
-    coo_record = generate_coo_taobao_ctr(flags_obj, record)
+    n_user = record['uid'].nunique()
+    n_item = record['iid'].nunique()
+    coo_record = generate_coo_taobao_ctr(flags_obj, train_record, n_user=n_user, n_item=n_item)
     generate_coo_time = time.time() - start_time
     print('generate coo time: {:.2f} s'.format(generate_coo_time))
     print('num record: {}'.format(coo_record.nnz))
