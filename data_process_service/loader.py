@@ -29,11 +29,11 @@ class Loader(object):
         raise NotImplementedError
 
 
-class CSVLoader(Loader):
+class CsvLoader(Loader):
 
     def __init__(self, flags_obj):
 
-        super(CSVLoader, self).__init__(flags_obj)
+        super(CsvLoader, self).__init__(flags_obj)
     
     def load_file(self, filename, **kwargs):
 
@@ -41,11 +41,11 @@ class CSVLoader(Loader):
         self.record = pd.read_csv(filename, **kwargs)
 
 
-class COOLoader(Loader):
+class CooLoader(Loader):
 
     def __init__(self, flags_obj):
 
-        super(COOLoader, self).__init__(flags_obj)
+        super(CooLoader, self).__init__(flags_obj)
     
     def load_file(self, filename, **kwargs):
 

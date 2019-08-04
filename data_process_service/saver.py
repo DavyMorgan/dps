@@ -31,11 +31,11 @@ class Saver(object):
         raise NotImplementedError
 
 
-class COOSaver(Saver):
+class CooSaver(Saver):
 
     def __init__(self, flags_obj):
 
-        super(COOSaver, self).__init__(flags_obj)
+        super(CooSaver, self).__init__(flags_obj)
     
     def save_file(self, filename, data):
 
