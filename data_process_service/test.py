@@ -32,7 +32,7 @@ flags.DEFINE_string('save_path', '/home/zhengyu/data/taobao', 'Path to save file
 
 def test_csvloader(flags_obj):
 
-    loader = LOADER.CSVLoader(flags_obj)
+    loader = LOADER.CsvLoader(flags_obj)
     filename = 'UserBehavior.csv'
     loader.load_file(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
     loader.record.info()
@@ -187,8 +187,8 @@ def test_dokgenerator(flags_obj):
 def test_cooio(flags_obj):
 
     record = sp.coo_matrix(([1,1,1], ([0,1,2], [0,1,2])), shape=(3, 3))
-    saver = SAVER.COOSaver(flags_obj)
-    loader = LOADER.COOLoader(flags_obj)
+    saver = SAVER.CooSaver(flags_obj)
+    loader = LOADER.CooLoader(flags_obj)
 
     filename = 'test_cooio.npz'
     saver.save_file(filename, record)
@@ -280,14 +280,14 @@ def main(argv):
 
     flags_obj = flags.FLAGS
 
-    #test_csvloader(flags_obj)
+    test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
     #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)
-    test_coogenerator(flags_obj)
+    #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
     #test_cooio(flags_obj)
