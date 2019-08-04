@@ -122,7 +122,7 @@ def test_percentagesplitter(flags_obj):
     print('test split!')
 
 
-def test_coogenerator(flags_obj):
+def test_coogenerator_default(flags_obj):
 
     record = pd.DataFrame({'uid': [0,0,0,1,1,1,1], 'iid': [0,1,2,3,4,5,6], 'ts': [1,2,3,4,5,6,7]})
     generator = GENERATOR.CooGenerator(flags_obj)
@@ -131,6 +131,21 @@ def test_coogenerator(flags_obj):
     print('original record!')
 
     coo_record = generator.generate(record)
+
+    print('row: \t{}'.format(coo_record.row))
+    print('col: \t{}'.format(coo_record.col))
+    print('coo record!')
+
+
+def test_coogenerator(flags_obj):
+
+    record = pd.DataFrame({'uid': [3,3,3,4,4,4,4], 'iid': [3,4,5,6,7,8,9], 'ts': [1,2,3,4,5,6,7]})
+    generator = GENERATOR.CooGenerator(flags_obj)
+
+    print(record.head(10))
+    print('original record!')
+
+    coo_record = generator.generate(record, n_user=10, n_item=100)
 
     print('row: \t{}'.format(coo_record.row))
     print('col: \t{}'.format(coo_record.col))
@@ -268,10 +283,11 @@ def main(argv):
     #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
-    test_reindexer(flags_obj)
+    #test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
-    #test_coogenerator(flags_obj)
+    #test_coogenerator_default(flags_obj)
+    test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
     #test_dokgenerator(flags_obj)
     #test_cooio(flags_obj)
