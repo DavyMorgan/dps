@@ -31,6 +31,18 @@ class Saver(object):
         raise NotImplementedError
 
 
+class CsvSaver(Saver):
+
+    def __init__(self, flags_obj):
+
+        super(CsvSaver, self).__init__(flags_obj)
+    
+    def save_file(self, filename, data):
+
+        filename = os.path.join(self.save_path, filename)
+        data.to_csv(filename)
+
+
 class CooSaver(Saver):
 
     def __init__(self, flags_obj):
