@@ -26,6 +26,8 @@ class Splitter(object):
         record = self.rank(record)
         self.split_core(record, splits)
         self.drop_rank_and_reset_index()
+
+        return self.train_record, self.val_record, self.test_record
     
     def rank(self, record):
 

@@ -77,9 +77,9 @@ def split_taobao_ctr(flags_obj, record):
 
     splitter = SPLITTER.PercentageSplitter(flags_obj, record)
     splits = [0.6,0.2,0.2]
-    splitter.split(record, splits)
+    train_record, val_record, test_record = splitter.split(record, splits)
 
-    return splitter.train_record, splitter.val_record, splitter.test_record
+    return train_record, val_record, test_record
 
 
 def generate_coo_taobao_ctr(flags_obj, record, **kwargs):

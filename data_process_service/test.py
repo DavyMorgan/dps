@@ -113,15 +113,15 @@ def test_absolutesplitter(flags_obj):
 
     record = record.sample(frac=1.0)
     splits = [-1, 1, 1]
-    splitter.split(record, splits)
+    train_record, val_record, test_record = splitter.split(record, splits)
 
-    print(splitter.train_record.head(10))
+    print(train_record.head(10))
     print('train split!')
 
-    print(splitter.val_record.head(10))
+    print(val_record.head(10))
     print('val split!')
 
-    print(splitter.test_record.head(10))
+    print(test_record.head(10))
     print('test split!')
 
 
@@ -135,15 +135,15 @@ def test_percentagesplitter(flags_obj):
 
     record = record.sample(frac=1.0)
     splits = [0.6,0.2,0.2]
-    splitter.split(record, splits)
+    train_record, val_record, test_record = splitter.split(record, splits)
 
-    print(splitter.train_record.head(10))
+    print(train_record.head(10))
     print('train split!')
 
-    print(splitter.val_record.head(10))
+    print(val_record.head(10))
     print('val split!')
 
-    print(splitter.test_record.head(10))
+    print(test_record.head(10))
     print('test split!')
 
 
@@ -364,7 +364,7 @@ def main(argv):
     #test_reindexer_user_item(flags_obj)
     #test_reindexer_reindex(flags_obj)
     #test_absolutesplitter(flags_obj)
-    #test_percentagesplitter(flags_obj)
+    test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)
     #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
@@ -375,7 +375,7 @@ def main(argv):
     #test_pairsampler(flags_obj)
     #test_csvreporter(flags_obj)
     #test_csvio(flags_obj)
-    test_jsonio(flags_obj)
+    #test_jsonio(flags_obj)
 
 
 if __name__ == "__main__":
