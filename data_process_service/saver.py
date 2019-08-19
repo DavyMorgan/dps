@@ -26,7 +26,7 @@ class Saver(object):
 
             os.mkdir(self.save_path)
     
-    def save_file(self, filename, data):
+    def save(self, filename, data):
 
         raise NotImplementedError
 
@@ -37,7 +37,7 @@ class CsvSaver(Saver):
 
         super(CsvSaver, self).__init__(flags_obj)
     
-    def save_file(self, filename, data):
+    def save(self, filename, data):
 
         filename = os.path.join(self.save_path, filename)
         data.to_csv(filename)
@@ -49,7 +49,7 @@ class CooSaver(Saver):
 
         super(CooSaver, self).__init__(flags_obj)
     
-    def save_file(self, filename, data):
+    def save(self, filename, data):
 
         filename = os.path.join(self.save_path, filename)
         sp.save_npz(filename, data)

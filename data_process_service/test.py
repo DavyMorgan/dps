@@ -216,7 +216,7 @@ def test_cooio(flags_obj):
     loader = LOADER.CooLoader(flags_obj)
 
     filename = 'test_cooio.npz'
-    saver.save_file(filename, record)
+    saver.save(filename, record)
     record_reload = loader.load(filename)
 
     nnz = (record != record_reload).nnz
@@ -321,7 +321,7 @@ def test_csvio(flags_obj):
     loader = LOADER.CsvLoader(flags_obj)
 
     filename = 'test_csvio.csv'
-    saver.save_file(filename, record)
+    saver.save(filename, record)
     record_reload = loader.load(filename, index_col=0)
 
     if record.equals(record_reload):

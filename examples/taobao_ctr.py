@@ -94,7 +94,7 @@ def save_coo_taobao_ctr(flags_obj, coo_record):
 
     saver = SAVER.CooSaver(flags_obj)
     filename = 'taobao_ctr_train_coo.npz'
-    saver.save_file(filename, coo_record)
+    saver.save(filename, coo_record)
 
 
 def test_taobao_ctr(flags_obj):
