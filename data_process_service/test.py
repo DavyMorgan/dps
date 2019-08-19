@@ -291,6 +291,27 @@ def test_csvreporter(flags_obj):
     print('finish report!!')
 
 
+def test_csvio(flags_obj):
+
+    record = pd.DataFrame({'uid': [3,3,3,4,4,4,4], 'iid': [0,1,2,3,4,5,6]})
+    saver = SAVER.CsvSaver(flags_obj)
+    loader = LOADER.CsvLoader(flags_obj)
+
+    filename = 'test_csvio.csv'
+    saver.save_file(filename, record)
+    loader.load_file(filename, index_col=0)
+    record_reload = loader.record
+
+    if record.equals(record_reload):
+
+        print('Save and Load Success!')
+        os.remove(os.path.join(flags_obj.save_path, filename))
+    
+    else:
+
+        print('DataFrame Saved not consistent with DataFrame Loaded!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -309,7 +330,8 @@ def main(argv):
     #test_sparsetransformer(flags_obj)
     #test_pointsampler(flags_obj)
     #test_pairsampler(flags_obj)
-    test_csvreporter(flags_obj)
+    #test_csvreporter(flags_obj)
+    test_csvio(flags_obj)
 
 
 if __name__ == "__main__":
