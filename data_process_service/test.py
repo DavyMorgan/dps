@@ -65,7 +65,7 @@ def test_duplicationfilter(flags_obj):
     print('records after filter!')
 
 
-def test_reindexer(flags_obj):
+def test_reindexer_user_item(flags_obj):
 
     record = pd.DataFrame({'uid': [2,2,4,4,4,4], 'iid': [5,6,7,8,9,10]})
     reindexer = REINDEXER.Reindexer(flags_obj)
@@ -81,6 +81,26 @@ def test_reindexer(flags_obj):
     print('user reindex map!')
     print(item_reindex_map)
     print('item reindex map!')
+
+
+def test_reindexer_reindex(flags_obj):
+
+    record = pd.DataFrame({'x': [2,2,4,4,4,4], 'y': [5,6,7,8,9,10], 'z': [11,12,13,14,15,16]})
+    reindexer = REINDEXER.Reindexer(flags_obj)
+    print(record.head(10))
+    print('data frames before reindex!')
+
+    record, [x_reindex_map, y_reindex_map] = reindexer.reindex(record, ['x', 'y'])
+    record, z_reindex_map = reindexer.reindex(record, 'z')
+
+    print(record.head(10))
+    print('data frames after reindex!')
+    print(x_reindex_map)
+    print('x reindex map!')
+    print(y_reindex_map)
+    print('y reindex map!')
+    print(z_reindex_map)
+    print('z reindex map!')
 
 
 def test_absolutesplitter(flags_obj):
@@ -321,7 +341,8 @@ def main(argv):
     #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
-    test_reindexer(flags_obj)
+    #test_reindexer_user_item(flags_obj)
+    test_reindexer_reindex(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)

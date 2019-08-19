@@ -32,3 +32,22 @@ class Reindexer(object):
 
         record, reindex_map = self.reindex_core(record, 'iid')
         return record, reindex_map
+    
+    def reindex(self, record, column_names):
+
+        if not isinstance(column_names, (list, tuple)):
+
+            column_names = [column_names]
+        
+        reindex_maps = []
+        
+        for column in column_names:
+
+            record, reindex_map = self.reindex_core(record, column)
+            reindex_maps.append(reindex_map)
+        
+        if len(reindex_maps) == 1:
+
+            reindex_maps = reindex_maps[0]
+        
+        return record, reindex_maps
