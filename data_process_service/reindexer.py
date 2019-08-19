@@ -20,13 +20,15 @@ class Reindexer(object):
         reindex_map = {keys[i]: i for i in range(num_entities)}
 
         record[column_name] = record[column_name].map(reindex_map)
+
+        return record, reindex_map
     
     def reindex_user(self, record):
 
-        self.reindex_core(record, 'uid')
-        return record
+        record, reindex_map = self.reindex_core(record, 'uid')
+        return record, reindex_map
     
     def reindex_item(self, record):
 
-        self.reindex_core(record, 'iid')
-        return record
+        record, reindex_map = self.reindex_core(record, 'iid')
+        return record, reindex_map

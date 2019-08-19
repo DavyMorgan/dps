@@ -72,11 +72,15 @@ def test_reindexer(flags_obj):
     print(record.head(10))
     print('data frames before reindex!')
 
-    record = reindexer.reindex_user(record)
-    record = reindexer.reindex_item(record)
+    record, user_reindex_map = reindexer.reindex_user(record)
+    record, item_reindex_map = reindexer.reindex_item(record)
 
     print(record.head(10))
     print('data frames after reindex!')
+    print(user_reindex_map)
+    print('user reindex map!')
+    print(item_reindex_map)
+    print('item reindex map!')
 
 
 def test_absolutesplitter(flags_obj):
@@ -317,7 +321,7 @@ def main(argv):
     #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
-    #test_reindexer(flags_obj)
+    test_reindexer(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)
@@ -329,7 +333,7 @@ def main(argv):
     #test_pointsampler(flags_obj)
     #test_pairsampler(flags_obj)
     #test_csvreporter(flags_obj)
-    test_csvio(flags_obj)
+    #test_csvio(flags_obj)
 
 
 if __name__ == "__main__":

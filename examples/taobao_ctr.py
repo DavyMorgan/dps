@@ -26,7 +26,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_string('name', 'test', 'Test name.')
 flags.DEFINE_bool('test', False, 'Whether in test mode.')
-flags.DEFINE_string('scale', '100M', 'Dataset Scale')
+flags.DEFINE_string('scale', '1M', 'Dataset Scale')
 flags.DEFINE_string('load_path', '', 'Path to load file.')
 flags.DEFINE_string('save_path', './data/taobao_ctr/output', 'Path to save file.')
 
@@ -67,8 +67,8 @@ def filter_cf_taobao_ctr(flags_obj, record):
 def reindex_taobao_ctr(flags_obj, record):
 
     reindexer = REINDEXER.Reindexer(flags_obj)
-    record = reindexer.reindex_item(record)
-    record = reindexer.reindex_user(record)
+    record, _ = reindexer.reindex_item(record)
+    record, _ = reindexer.reindex_user(record)
 
     return record
 
