@@ -26,7 +26,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_string('name', 'test', 'Test name.')
 flags.DEFINE_bool('test', False, 'Whether in test mode.')
-flags.DEFINE_string('scale', '1M', 'Dataset Scale')
+flags.DEFINE_string('scale', '100M', 'Dataset Scale')
 flags.DEFINE_string('load_path', '', 'Path to load file.')
 flags.DEFINE_string('save_path', './data/taobao_ctr/output', 'Path to save file.')
 
@@ -36,12 +36,12 @@ def load_taobao_ctr(flags_obj):
     if flags_obj.scale == '1M':
         filename = 'taobao_ctr_sampled.csv'
         flags_obj.load_path = './data/taobao_ctr/'
-        loader = LOADER.CSVLoader(flags_obj)
+        loader = LOADER.CsvLoader(flags_obj)
         loader.load_file(filename, index_col=0)
     elif flags_obj.scale == '100M':
         filename = 'UserBehavior.csv'
         flags_obj.load_path = '/home/zhengyu/data/taobao/'
-        loader = LOADER.CSVLoader(flags_obj)
+        loader = LOADER.CsvLoader(flags_obj)
         loader.load_file(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
 
     return loader.record
@@ -92,7 +92,7 @@ def generate_coo_taobao_ctr(flags_obj, record, **kwargs):
 
 def save_coo_taobao_ctr(flags_obj, coo_record):
 
-    saver = SAVER.COOSaver(flags_obj)
+    saver = SAVER.CooSaver(flags_obj)
     filename = 'taobao_ctr_train_coo.npz'
     saver.save_file(filename, coo_record)
 
