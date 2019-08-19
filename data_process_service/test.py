@@ -334,6 +334,26 @@ def test_csvio(flags_obj):
         print('DataFrame Saved not consistent with DataFrame Loaded!')
 
 
+def test_jsonio(flags_obj):
+
+    record = {'a': 1, 'b': 2}
+    saver = SAVER.JsonSaver(flags_obj)
+    loader = LOADER.JsonLoader(flags_obj)
+
+    filename = 'test_jsonio.json'
+    saver.save(filename, record)
+    record_reload = loader.load(filename)
+
+    if record == record_reload:
+
+        print('Save and Load Success!')
+        os.remove(os.path.join(flags_obj.save_path, filename))
+    
+    else:
+
+        print('Dict Saved not consistent with Dict Loaded!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -342,7 +362,7 @@ def main(argv):
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
     #test_reindexer_user_item(flags_obj)
-    test_reindexer_reindex(flags_obj)
+    #test_reindexer_reindex(flags_obj)
     #test_absolutesplitter(flags_obj)
     #test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)
@@ -355,6 +375,7 @@ def main(argv):
     #test_pairsampler(flags_obj)
     #test_csvreporter(flags_obj)
     #test_csvio(flags_obj)
+    test_jsonio(flags_obj)
 
 
 if __name__ == "__main__":
