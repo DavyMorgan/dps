@@ -20,6 +20,7 @@ import generator as GENERATOR
 import saver as SAVER
 import transformer as TRANSFORMER
 import sampler as SAMPLER
+import reporter as REPORTER
 
 
 FLAGS = flags.FLAGS
@@ -276,11 +277,25 @@ def test_pairsampler(flags_obj):
     print('Finish Sampling!')
 
 
+def test_csvreporter(flags_obj):
+
+    record = pd.DataFrame({'uid': [1,2,2,3,3,3,4,4,4,4,7,7,7,7,7,7,7],
+                           'iid': [0,1,2,3,4,5,6,5,4,3,2,1,0,1,2,3,4],
+                           'ts': [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]})
+    reporter = REPORTER.CsvReporter(flags_obj)
+    print(record.head(20))
+    print('data frames!')
+
+    reporter.report(record)
+
+    print('finish report!!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
 
-    test_csvloader(flags_obj)
+    #test_csvloader(flags_obj)
     #test_cffilter(flags_obj)
     #test_duplicationfilter(flags_obj)
     #test_reindexer(flags_obj)
@@ -294,6 +309,7 @@ def main(argv):
     #test_sparsetransformer(flags_obj)
     #test_pointsampler(flags_obj)
     #test_pairsampler(flags_obj)
+    test_csvreporter(flags_obj)
 
 
 if __name__ == "__main__":
