@@ -7,6 +7,8 @@
 import pandas as pd
 import scipy.sparse as sp
 
+import json
+
 import os
 
 
@@ -54,4 +56,19 @@ class CooLoader(Loader):
         filename = os.path.join(self.load_path, filename)
         record = sp.load_npz(filename)
 
+        return record
+
+
+class JsonLoader(Loader):
+
+    def __init__(self, flags_obj):
+
+        super(JsonLoader, self).__init__(flags_obj)
+    
+    def load(self, filename, **kwargs):
+
+        filename = os.path.join(self.load_path, filename)
+        with open(filename, 'r') as f:
+            record = json.loads(f.read())
+        
         return record

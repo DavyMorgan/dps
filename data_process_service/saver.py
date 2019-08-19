@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
+import json
+
 import os
 
 
@@ -53,3 +55,16 @@ class CooSaver(Saver):
 
         filename = os.path.join(self.save_path, filename)
         sp.save_npz(filename, data)
+
+
+class JsonSaver(Saver):
+
+    def __init__(self, flags_obj):
+
+        super(JsonSaver, self).__init__(flags_obj)
+    
+    def save(self, filename, data):
+
+        filename = os.path.join(self.save_path, filename)
+        with open(filename, 'w') as f:
+            f.write(json.dumps(data))
