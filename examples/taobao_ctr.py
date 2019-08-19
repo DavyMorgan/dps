@@ -17,6 +17,7 @@ sys.path.append('../')
 import data_process_service.loader as LOADER
 import data_process_service.filter as FILTER
 import data_process_service.reindexer as REINDEXER
+import data_process_service.reporter as REPORTER
 import data_process_service.splitter as SPLITTER
 import data_process_service.generator as GENERATOR
 import data_process_service.saver as SAVER
@@ -73,6 +74,12 @@ def reindex_taobao_ctr(flags_obj, record):
     return record
 
 
+def report_taobao_ctr(flags_obj, record):
+
+    reporter = REPORTER.CsvReporter(flags_obj)
+    reporter.report(record)
+
+
 def split_taobao_ctr(flags_obj, record):
 
     splitter = SPLITTER.PercentageSplitter(flags_obj, record)
@@ -121,6 +128,11 @@ def test_taobao_ctr(flags_obj):
     record = reindex_taobao_ctr(flags_obj, record)
     reindex_time = time.time() - start_time
     print('reindex time: {:.2f} s'.format(reindex_time))
+
+    start_time = time.time()
+    report_taobao_ctr(flags_obj, record)
+    report_time = time.time() - start_time
+    print('report time: {:.2f} s'.format(report_time))
 
     start_time = time.time()
     train_record, val_record, test_record = split_taobao_ctr(flags_obj, record)
