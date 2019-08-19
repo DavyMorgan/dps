@@ -35,10 +35,10 @@ def test_csvloader(flags_obj):
 
     loader = LOADER.CsvLoader(flags_obj)
     filename = 'UserBehavior.csv'
-    loader.load_file(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
-    loader.record.info()
+    record = loader.load(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
+    record.info()
 
-    return loader.record
+    return record
 
 
 def test_cffilter(flags_obj):
@@ -193,8 +193,7 @@ def test_cooio(flags_obj):
 
     filename = 'test_cooio.npz'
     saver.save_file(filename, record)
-    loader.load_file(filename)
-    record_reload = loader.record
+    record_reload = loader.load(filename)
 
     nnz = (record != record_reload).nnz
     if nnz == 0:
@@ -299,8 +298,7 @@ def test_csvio(flags_obj):
 
     filename = 'test_csvio.csv'
     saver.save_file(filename, record)
-    loader.load_file(filename, index_col=0)
-    record_reload = loader.record
+    record_reload = loader.load(filename, index_col=0)
 
     if record.equals(record_reload):
 

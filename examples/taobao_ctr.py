@@ -37,14 +37,14 @@ def load_taobao_ctr(flags_obj):
         filename = 'taobao_ctr_sampled.csv'
         flags_obj.load_path = './data/taobao_ctr/'
         loader = LOADER.CsvLoader(flags_obj)
-        loader.load_file(filename, index_col=0)
+        record = loader.load(filename, index_col=0)
     elif flags_obj.scale == '100M':
         filename = 'UserBehavior.csv'
         flags_obj.load_path = '/home/zhengyu/data/taobao/'
         loader = LOADER.CsvLoader(flags_obj)
-        loader.load_file(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
+        record = loader.load(filename, header=None, names=['uid', 'iid', 'cid', 'behavior', 'ts'])
 
-    return loader.record
+    return record
 
 
 def filter_duplication_taobao_ctr(flags_obj, record):

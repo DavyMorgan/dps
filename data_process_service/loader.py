@@ -24,7 +24,7 @@ class Loader(object):
 
             print('Error! Load path ({}) does not exist!'.format(self.load_path))
     
-    def load_file(self, filename, **kwargs):
+    def load(self, filename, **kwargs):
 
         raise NotImplementedError
 
@@ -35,10 +35,12 @@ class CsvLoader(Loader):
 
         super(CsvLoader, self).__init__(flags_obj)
     
-    def load_file(self, filename, **kwargs):
+    def load(self, filename, **kwargs):
 
         filename = os.path.join(self.load_path, filename)
-        self.record = pd.read_csv(filename, **kwargs)
+        record = pd.read_csv(filename, **kwargs)
+
+        return record
 
 
 class CooLoader(Loader):
@@ -47,7 +49,9 @@ class CooLoader(Loader):
 
         super(CooLoader, self).__init__(flags_obj)
     
-    def load_file(self, filename, **kwargs):
+    def load(self, filename, **kwargs):
 
         filename = os.path.join(self.load_path, filename)
-        self.record = sp.load_npz(filename)
+        record = sp.load_npz(filename)
+
+        return record
