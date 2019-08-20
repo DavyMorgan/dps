@@ -21,6 +21,8 @@ class Reindexer(object):
 
         record[column_name] = record[column_name].map(reindex_map)
 
+        reindex_map = {str(keys[i]): i for i in range(num_entities)}
+
         return record, reindex_map
     
     def reindex_user(self, record):
