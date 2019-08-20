@@ -354,6 +354,19 @@ def test_jsonio(flags_obj):
         print('Dict Saved not consistent with Dict Loaded!')
 
 
+def test_idfilter(flags_obj):
+
+    record = pd.DataFrame({'uid': [3,3,3,4,4,4,4], 'iid': [0,1,2,3,4,5,6]})
+    filter = FILTER.IDFilter(flags_obj, record)
+    filtered_ids = pd.Series([2,3,4], name='iid')
+    print(record.head(10))
+    print('{} records before filter!'.format(len(record)))
+
+    record = filter.filter(record, 'iid', filtered_ids)
+    print(record.head(10))
+    print('{} records after filter!'.format(len(record)))
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -364,7 +377,7 @@ def main(argv):
     #test_reindexer_user_item(flags_obj)
     #test_reindexer_reindex(flags_obj)
     #test_absolutesplitter(flags_obj)
-    test_percentagesplitter(flags_obj)
+    #test_percentagesplitter(flags_obj)
     #test_coogenerator_default(flags_obj)
     #test_coogenerator(flags_obj)
     #test_lilgenerator(flags_obj)
@@ -376,6 +389,7 @@ def main(argv):
     #test_csvreporter(flags_obj)
     #test_csvio(flags_obj)
     #test_jsonio(flags_obj)
+    test_idfilter(flags_obj)
 
 
 if __name__ == "__main__":
