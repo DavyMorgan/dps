@@ -40,7 +40,7 @@ DokGenerator: generate sparse matrix in dictionary of keys format
 ### transformer
 SparseTransformer: perform sparse matrix format transformation from coo to lil and dok
 ### saver
-CsvSaver: save DataFrame to file
+CsvSaver: save DataFrame to file  
 CooSaver: save coo matrix to file  
 JsonSaver: save dict to file
 ### reporter
