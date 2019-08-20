@@ -27,7 +27,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_string('name', 'test', 'Test name.')
 flags.DEFINE_bool('test', False, 'Whether in test mode.')
-flags.DEFINE_string('scale', '1M', 'Dataset Scale')
+flags.DEFINE_string('scale', '100M', 'Dataset Scale')
 flags.DEFINE_string('load_path', '', 'Path to load file.')
 flags.DEFINE_string('save_path', './data/taobao_ctr/output', 'Path to save file.')
 
