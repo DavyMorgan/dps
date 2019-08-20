@@ -86,3 +86,20 @@ class DuplicationFilter(Filter):
         record = record.sort_values('ts').drop_duplicates(['uid', 'iid']).reset_index(drop=True)
 
         return record
+
+
+class IDFilter(Filter):
+
+    def __init__(self, flags_obj, record):
+
+        super(IDFilter, self).__init__(flags_obj, record)
+    
+    def check(self, record):
+
+        return True
+    
+    def filter(self, record, column, filtered_ids):
+
+        record = record.merge(filtered_ids, on=column)
+
+        return record
