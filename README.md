@@ -23,7 +23,7 @@ absl-py
 The best entry point to use the following components is a DataFrame with 'uid', 'iid' and 'ts' in its columns.
 ### loader
 CsvLoader: load csv file  
-CooLoader: load coo file (sparse matrix in coordidate format)
+CooLoader: load coo file (sparse matrix in coordidate format)  
 JsonLoader: load json file
 ### filter
 CFFilter: k-core filter  
@@ -41,10 +41,10 @@ DokGenerator: generate sparse matrix in dictionary of keys format
 SparseTransformer: perform sparse matrix format transformation from coo to lil and dok
 ### saver
 CsvSaver: save DataFrame to file
-CooSaver: save coo matrix to file
+CooSaver: save coo matrix to file  
 JsonSaver: save dict to file
 ### reporter
-CsvReporter: report statistics of the data
+CsvReporter: report statistics of the data  
 ### sampler
 PointSampler: negative sampling for pointwise optimization such as logloss  
 PairSampler: negtive sampling for pairwise optimization such as bprloss
