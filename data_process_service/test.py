@@ -105,10 +105,10 @@ def test_reindexer_reindex(flags_obj):
 
 def test_absolutesplitter(flags_obj):
 
-    #record = pd.DataFrame({'uid': [3,3,3,4,4,4,4], 'iid': [1,2,3,4,5,6,7], 'ts': [1,2,3,4,5,6,7]})
-    record = pd.DataFrame({'uid': [4,4,4,4,2,2], 'iid': [10,9,8,7,6,5], 'ts': [6,5,4,3,2,1]})
+    record = pd.DataFrame({'uid': [2,2,4,4,4,4,4,4,4,4,4,4], 'iid': [12,11,10,9,8,7,6,5,4,3,2,1], 'ts': [12,11,10,9,8,7,6,5,4,3,2,1]})
+    #record = pd.DataFrame({'uid': [4,4,4,4,2,2], 'iid': [10,9,8,7,6,5], 'ts': [6,5,4,3,2,1]})
     splitter = SPLITTER.AbsoluteSplitter(flags_obj, record)
-    print(record.head(10))
+    print(record.head(15))
     print('data frames before split!')
 
     record = record.sample(frac=1.0)
@@ -127,10 +127,10 @@ def test_absolutesplitter(flags_obj):
 
 def test_percentagesplitter(flags_obj):
 
-    record = pd.DataFrame({'uid': [2,2,4,4,4,4], 'iid': [10,9,8,7,6,5], 'ts': [6,5,4,3,2,1]})
+    record = pd.DataFrame({'uid': [2,2,4,4,4,4,4,4,4,4,4,4], 'iid': [12,11,10,9,8,7,6,5,4,3,2,1], 'ts': [12,11,10,9,8,7,6,5,4,3,2,1]})
     #record = pd.DataFrame({'uid': [4,4,4,4,4,2,2], 'iid': [10,9,8,7,6,5,4], 'ts': [6,6,6,6,6,6,6]})
     splitter = SPLITTER.PercentageSplitter(flags_obj, record)
-    print(record.head(10))
+    print(record.head(15))
     print('data frames before split!')
 
     record = record.sample(frac=1.0)

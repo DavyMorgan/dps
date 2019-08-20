@@ -35,9 +35,13 @@ class Splitter(object):
     
     def split_core(self, record, splits):
 
-        self.test_record = record[record['rank'] <= splits[2]]
-        self.val_record = record[(record['rank'] > splits[2]) & (record['rank'] <= splits[2] + splits[1])]
         self.train_record = record[record['rank'] > splits[2] + splits[1]]
+        
+        val_test_record = record[record['rank'] <= splits[2] + splits[1]].copy().reset_index(drop=True)
+        val_test_record['rank'] = val_test_record.groupby('uid')['rank'].transform(np.random.permutation)
+        
+        self.val_record = val_test_record[val_test_record['rank'] > splits[2]]
+        self.test_record = val_test_record[val_test_record['rank'] <= splits[2]]
     
     def drop_rank_and_reset_index(self):
 
