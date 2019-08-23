@@ -4,6 +4,7 @@
 #pylint: disable=no-name-in-module
 #pylint: disable=import-error
 
+import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
@@ -71,4 +72,18 @@ class JsonLoader(Loader):
         with open(filename, 'r') as f:
             record = json.loads(f.read())
         
+        return record
+
+
+class NpyLoader(Loader):
+
+    def __init__(self, flags_obj):
+
+        super(NpyLoader, self).__init__(flags_obj)
+    
+    def load(self, filename, **kwargs):
+
+        filename = os.path.join(self.load_path, filename)
+        record = np.load(filename)
+
         return record
