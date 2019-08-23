@@ -7,6 +7,7 @@
 from absl import app
 from absl import flags
 
+import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
@@ -367,6 +368,26 @@ def test_idfilter(flags_obj):
     print('{} records after filter!'.format(len(record)))
 
 
+def test_npyio(flags_obj):
+
+    record = np.array([1,2,3,4,5])
+    saver = SAVER.NpySaver(flags_obj)
+    loader = LOADER.NpyLoader(flags_obj)
+
+    filename = 'test_npyio.npy'
+    saver.save(filename, record)
+    record_reload = loader.load(filename)
+
+    if np.equal(record, record_reload).all():
+
+        print('Save and Load Success!')
+        os.remove(os.path.join(flags_obj.save_path, filename))
+    
+    else:
+
+        print('Dict Saved not consistent with Dict Loaded!')
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -389,7 +410,8 @@ def main(argv):
     #test_csvreporter(flags_obj)
     #test_csvio(flags_obj)
     #test_jsonio(flags_obj)
-    test_idfilter(flags_obj)
+    #test_idfilter(flags_obj)
+    test_npyio(flags_obj)
 
 
 if __name__ == "__main__":
