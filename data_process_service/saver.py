@@ -68,3 +68,15 @@ class JsonSaver(Saver):
         filename = os.path.join(self.save_path, filename)
         with open(filename, 'w') as f:
             f.write(json.dumps(data))
+
+
+class NpySaver(Saver):
+
+    def __init__(self, flags_obj):
+
+        super(NpySaver, self).__init__(flags_obj)
+    
+    def save(self, filename, data):
+
+        filename = os.path.join(self.save_path, filename)
+        np.save(filename, data)
