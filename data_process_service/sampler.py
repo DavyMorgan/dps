@@ -57,9 +57,9 @@ class PointSampler(Sampler):
 
         users = np.full(1 + self.neg_sample_rate, user, dtype=np.int64)
         items = np.full(1 + self.neg_sample_rate, pos_item, dtype=np.int64)
-        labels = np.zeros(1 + self.neg_sample_rate, dtype=np.int64)
+        labels = np.zeros(1 + self.neg_sample_rate, dtype=np.float32)
         
-        labels[0] = 1
+        labels[0] = 1.0
 
         negative_samples = self.generate_negative_samples(user)
         items[1:] = negative_samples[:]
