@@ -82,3 +82,4 @@ class PairSampler(Sampler):
         items_neg = self.generate_negative_samples(user)
         
         return users, items_pos, items_neg
+
