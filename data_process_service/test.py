@@ -21,6 +21,7 @@ import generator as GENERATOR
 import saver as SAVER
 import transformer as TRANSFORMER
 import sampler as SAMPLER
+import downsampler as DOWNSAMPLER
 import reporter as REPORTER
 
 
@@ -388,6 +389,26 @@ def test_npyio(flags_obj):
         print('Dict Saved not consistent with Dict Loaded!')
 
 
+def test_downsampler(flags_obj):
+
+    users = np.arange(1000000)
+    items = np.arange(1000000)
+    ts = np.arange(1000000)
+
+    record = pd.DataFrame({'uid': users, 'iid': items, 'ts': ts})
+    downsampler = DOWNSAMPLER.DownSampler(flags_obj)
+
+    record = downsampler.downsample_user(record, n=100000)
+    record = downsampler.downsample_user(record, frac=0.1)
+
+    record = downsampler.downsample_item(record, n=1000)
+    record = downsampler.downsample_item(record, frac=0.1)
+
+    print(record.head())
+    print(record.tail())
+    print(record.info())
+
+
 def main(argv):
 
     flags_obj = flags.FLAGS
@@ -411,9 +432,10 @@ def main(argv):
     #test_csvio(flags_obj)
     #test_jsonio(flags_obj)
     #test_idfilter(flags_obj)
-    test_npyio(flags_obj)
-
+    #test_npyio(flags_obj)
+    test_downsampler(flags_obj)
 
 if __name__ == "__main__":
 
     app.run(main)
+
