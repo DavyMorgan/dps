@@ -30,7 +30,7 @@ class Sampler(object):
 
         return user, pos_item
     
-    def generate_negative_samples(self, user):
+    def generate_negative_samples(self, user, **kwargs):
 
         negative_samples = np.full(self.neg_sample_rate, -1, dtype=np.int64)
 
