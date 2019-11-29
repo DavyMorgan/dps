@@ -23,6 +23,7 @@ import data_process_service.reporter as REPORTER
 import data_process_service.splitter as SPLITTER
 import data_process_service.generator as GENERATOR
 import data_process_service.saver as SAVER
+import data_process_service.grapher as GRAPHER
 
 
 def load_csv(flags_obj, filename, **kwargs):
@@ -259,4 +260,18 @@ def compute_popularity(flags_obj, coo_record, filename=None):
 
     compute_time = time.time() - start_time
     print('compute and save popularity time: {:.2f} s'.format(compute_time))
+
+
+def generate_graph(flags_obj, train_coo_record):
+
+    start_time = time.time()
+
+    grapher = GRAPHER.Grapher(flags_obj)
+    train_coo_adj_graph = grapher.generate_coo_adj_graph(train_coo_record)
+
+    saver =SAVER.CooSaver(flags_obj)
+    saver.save('train_coo_adj_graph.npz', train_coo_adj_graph)
+
+    generate_time = time.time() - start_time
+    print('generate adj time: {:.2f} s'.format(generate_time))
 
