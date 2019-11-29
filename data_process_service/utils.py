@@ -122,12 +122,19 @@ def save_reindex_user_item_map(flags_obj, user_reindex_map, item_reindex_map):
 
 def save_reindex_feature_map(flags_obj, feature, feature_reindex_map):
 
+    if not isinstance(feature, (list, tuple)):
+        feature = [feature]
+    if not isinstance(feature_reindex_map, (list, tuple)):
+        feature_reindex_map = [feature_reindex_map]
+
     start_time = time.time()
 
     saver = SAVER.JsonSaver(flags_obj)
 
-    filename = '{}_reindex.json'.format(feature)
-    saver.save(filename, feature_reindex_map)
+    for f, fm in zip(feature, feature_reindex_map):
+
+        filename = '{}_reindex.json'.format(f)
+        saver.save(filename, fm)
 
     save_reindex_feature_map_time = time.time() - start_time
     print('save reindex {} feature map time: {:.2f} s'.format(feature, save_reindex_feature_map_time))
