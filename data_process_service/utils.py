@@ -7,6 +7,7 @@
 from absl import app
 from absl import flags
 
+import numpy as np
 import pandas as pd
 
 import time
@@ -238,5 +239,24 @@ def save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_r
     saver.save(filename, test_coo_record)
 
     save_coo_time = time.time() - start_time
-    print('save_coo_time: {:.2f} s'.format(save_coo_time))
+    print('save coo time: {:.2f} s'.format(save_coo_time))
+
+
+def compute_popularity(flags_obj, coo_record, filename=None):
+
+    start_time = time.time()
+
+    popularity = np.zeros(coo_record.shape[1], dtype=np.int64)
+    dok_record = coo_record.todok()
+    df = pd.DataFrame(list(dok_record.keys()), columns=['uid', 'iid'])
+    df = df.groupby('iid').count().reset_index().rename(columns={'uid': 'count'})
+    popularity[df['iid']] = df['count']
+
+    if not filename:
+        filename = 'popularity.npy'
+    saver = SAVER.NpySaver(flags_obj)
+    saver.save(filename, popularity)
+
+    compute_time = time.time() - start_time
+    print('compute and save popularity time: {:.2f} s'.format(compute_time))
 
