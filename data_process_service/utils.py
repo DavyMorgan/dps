@@ -155,6 +155,20 @@ def split(flags_obj, record, splits):
     return train_record, val_record, test_record
 
 
+def skew_split(flags_obj, record, splits):
+
+    start_time = time.time()
+
+    splitter = SPLITTER.SkewSplitter(flags_obj, record)
+    train_record, val_record, test_record = splitter.split(record, splits)
+
+    split_time = time.time() - start_time
+    print('split time: {:.2f} s'.format(split_time))
+
+    return train_record, val_record, test_record
+
+
+
 def save_csv_record(flags_obj, record, train_record, val_record, test_record):
 
     start_time = time.time()
