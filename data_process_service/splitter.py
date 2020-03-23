@@ -74,3 +74,34 @@ class PercentageSplitter(Splitter):
         record['rank'] = record['ts'].groupby(record['uid']).rank(method='first', pct=True, ascending=False)
 
         return record
+
+
+class SkewSplitter(PercentageSplitter):
+
+    def __init__(self, flags_obj, record):
+
+        super(SkewSplitter, self).__init__(flags_obj, record)
+
+    def split(self, record, splits):
+
+        popularity = record[['iid', 'uid']].groupby('iid').count().reset_index().rename(columns={'uid': 'pop'})
+        record = record.merge(popularity, on='iid')
+        record['pop'] = record['pop'].apply(lambda x : 1/x)
+
+        self.test_record = record.groupby('uid').apply(pd.DataFrame.sample, frac=splits[2], weights='pop').reset_index(drop=True)
+
+        train_val_record = pd.concat([record, self.test_record]).drop_duplicates(keep=False).reset_index(drop=True)
+        train_val_record = self.rank(train_val_record)
+
+        self.train_record = train_val_record[train_val_record['rank'] >= splits[1]/(splits[0]+splits[1])]
+        self.val_record = train_val_record[train_val_record['rank'] < splits[1]/(splits[0]+splits[1])]
+
+        self.drop_and_reset_index()
+
+        return self.train_record, self.val_record, self.test_record
+
+    def drop_and_reset_index(self):
+
+        self.train_record = self.train_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
+        self.val_record = self.val_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
+        self.test_record = self.test_record.drop(columns=['pop']).reset_index(drop=True) 
