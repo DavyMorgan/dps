@@ -18,7 +18,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('name', 'taobao_preprocess', 'Test name.')
 flags.DEFINE_bool('test', False, 'Whether in test mode.')
 flags.DEFINE_string('load_path', './data/taobao_ctr/', 'Path to load file.')
-flags.DEFINE_string('save_path', './data/taobao_ctr/output', 'Path to save file.')
+flags.DEFINE_string('save_path', './data/taobao_ctr/output_CauseE', 'Path to save file.')
 
 
 def filter_items_with_multiple_cids_taobao_ctr(flags_obj, record):
@@ -58,12 +58,13 @@ def process_taobao(flags_obj):
     utils.save_reindex_user_item_map(flags_obj, user_reindex_map, item_reindex_map)
     utils.save_reindex_feature_map(flags_obj, 'cate', cate_reindex_map)
     #train_record, val_record, test_record = utils.split(flags_obj, record, [0.6, 0.2, 0.2])
-    train_record, val_record, test_record = utils.skew_split(flags_obj, record, [0.6, 0.2, 0.2])
-    utils.save_csv_record(flags_obj, record, train_record, val_record, test_record)
+    train_record, val_record, test_record = utils.skew_split(flags_obj, record, [0.6, 0.1, 0.3])
+    train_skew_record, test_skew_record = utils.skew_extract(flags_obj, test_record, 1/3)
+    utils.save_csv_record(flags_obj, record, train_record, val_record, test_skew_record, train_skew_record=train_skew_record)
     utils.report(flags_obj, record)
     utils.extract_save_item_feature(flags_obj, record, 'cate', 'cid')
-    coo_record, train_coo_record, val_coo_record, test_coo_record = utils.generate_coo(flags_obj, record, train_record, val_record, test_record)
-    utils.save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_record)
+    coo_record, train_coo_record, val_coo_record, test_coo_record, train_skew_coo_record = utils.generate_coo(flags_obj, record, train_record, val_record, test_skew_record, train_skew_record=train_skew_record)
+    utils.save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_record, train_skew_coo_record)
     utils.compute_popularity(flags_obj, train_coo_record)
     utils.compute_popularity(flags_obj, coo_record, 'popularity_all.npy')
     utils.generate_graph(flags_obj, train_coo_record)
