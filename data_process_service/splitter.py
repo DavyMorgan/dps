@@ -105,3 +105,26 @@ class SkewSplitter(PercentageSplitter):
         self.train_record = self.train_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
         self.val_record = self.val_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
         self.test_record = self.test_record.drop(columns=['pop']).reset_index(drop=True) 
+
+
+class TemporalSplitter(PercentageSplitter):
+
+    def __init__(self, flags_obj, record):
+
+        self.name = flags_obj.name + '_temporal_splitter' 
+
+    def split(self, record, splits):
+
+        record = self.rank(record)
+
+        self.early_record = record[record['rank'] >= splits[1]]
+        self.late_record = record[record['rank'] < splits[1]]
+
+        self.drop_rank_and_reset_index()
+
+        return self.early_record, self.late_record
+
+    def drop_rank_and_reset_index(self):
+
+        self.early_record = self.early_record.drop(columns=['rank']).reset_index(drop=True)
+        self.late_record = self.late_record.drop(columns=['rank']).reset_index(drop=True)
