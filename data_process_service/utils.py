@@ -9,6 +9,7 @@ from absl import flags
 
 import numpy as np
 import pandas as pd
+import scipy.sparse as sp
 
 import time
 import sys
@@ -168,8 +169,20 @@ def skew_split(flags_obj, record, splits):
     return train_record, val_record, test_record
 
 
+def skew_extract(flags_obj, skew_record, frac):
 
-def save_csv_record(flags_obj, record, train_record, val_record, test_record):
+    start_time = time.time()
+
+    splitter = SPLITTER.TemporalSplitter(flags_obj, skew_record)
+    skew_train_record, skew_test_record = splitter.split(skew_record, [frac, 1-frac])
+
+    split_time = time.time() - start_time
+    print('split time: {:.2f} s'.format(split_time))
+
+    return skew_train_record, skew_test_record
+
+
+def save_csv_record(flags_obj, record, train_record, val_record, test_record, train_skew_record=None):
 
     start_time = time.time()
 
@@ -186,6 +199,10 @@ def save_csv_record(flags_obj, record, train_record, val_record, test_record):
 
     filename = 'test_record.csv'
     saver.save(filename, test_record)
+
+    if isinstance(train_skew_record, pd.DataFrame):
+        filename = 'train_skew_record.csv'
+        saver.save(filename, train_skew_record)
 
     save_csv_time = time.time() - start_time
     print('save csv time: {:.2f} s'.format(save_csv_time))
@@ -216,7 +233,7 @@ def extract_save_item_feature(flags_obj, record, feature, col):
     print('extract save item feature time: {:.2f} s'.format(extract_save_item_feature_time))
 
 
-def generate_coo(flags_obj, record, train_record, val_record, test_record):
+def generate_coo(flags_obj, record, train_record, val_record, test_record, train_skew_record=None):
 
     start_time = time.time()
 
@@ -228,14 +245,19 @@ def generate_coo(flags_obj, record, train_record, val_record, test_record):
     train_coo_record = generator.generate(train_record, n_user=n_user, n_item=n_item)
     val_coo_record = generator.generate(val_record, n_user=n_user, n_item=n_item)
     test_coo_record = generator.generate(test_record, n_user=n_user, n_item=n_item)
+    if isinstance(train_skew_record, pd.DataFrame):
+        train_skew_coo_record = generator.generate(train_skew_record, n_user=n_user, n_item=n_item)
 
     generate_coo_time = time.time() - start_time
     print('generate coo time: {:.2f} s'.format(generate_coo_time))
 
-    return coo_record, train_coo_record, val_coo_record, test_coo_record
+    if isinstance(train_skew_record, pd.DataFrame):
+        return coo_record, train_coo_record, val_coo_record, test_coo_record, train_skew_coo_record
+    else:
+        return coo_record, train_coo_record, val_coo_record, test_coo_record
 
 
-def save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_record):
+def save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_record, train_skew_coo_record=None):
 
     start_time = time.time()
 
@@ -252,6 +274,10 @@ def save_coo(flags_obj, coo_record, train_coo_record, val_coo_record, test_coo_r
 
     filename = 'test_coo_record.npz'
     saver.save(filename, test_coo_record)
+
+    if isinstance(train_skew_coo_record, sp.coo_matrix):
+        filename = 'train_skew_coo_record.npz'
+        saver.save(filename, train_skew_coo_record)
 
     save_coo_time = time.time() - start_time
     print('save coo time: {:.2f} s'.format(save_coo_time))
