@@ -82,11 +82,17 @@ class SkewSplitter(PercentageSplitter):
 
         super(SkewSplitter, self).__init__(flags_obj, record)
 
-    def split(self, record, splits):
+    def split(self, record, splits, cap=None):
 
         popularity = record[['iid', 'uid']].groupby('iid').count().reset_index().rename(columns={'uid': 'pop'})
         record = record.merge(popularity, on='iid')
         record['pop'] = record['pop'].apply(lambda x : 1/x)
+
+        if cap is not None:
+            pop = record['pop'].to_numpy()
+            pop = np.unique(pop)
+            cap_threshold = np.percentile(pop, cap)
+            record['pop'] = record['pop'].apply(lambda x : min(x, cap_threshold))
 
         self.test_record = record.groupby('uid').apply(pd.DataFrame.sample, frac=splits[2], weights='pop').reset_index(drop=True)
 

@@ -156,12 +156,12 @@ def split(flags_obj, record, splits):
     return train_record, val_record, test_record
 
 
-def skew_split(flags_obj, record, splits):
+def skew_split(flags_obj, record, splits, cap=None):
 
     start_time = time.time()
 
     splitter = SPLITTER.SkewSplitter(flags_obj, record)
-    train_record, val_record, test_record = splitter.split(record, splits)
+    train_record, val_record, test_record = splitter.split(record, splits, cap)
 
     split_time = time.time() - start_time
     print('split time: {:.2f} s'.format(split_time))
