@@ -169,6 +169,19 @@ def skew_split(flags_obj, record, splits, cap=None):
     return train_record, val_record, test_record
 
 
+def skew_split_v2(flags_obj, record, splits, cap=None):
+
+    start_time = time.time()
+
+    splitter = SPLITTER.SkewSplitter(flags_obj, record)
+    train_record, val_test_record = splitter.split(record, splits, cap)
+
+    split_time = time.time() - start_time
+    print('split time: {:.2f} s'.format(split_time))
+
+    return train_record, val_test_record
+
+
 def skew_extract(flags_obj, skew_record, frac):
 
     start_time = time.time()
@@ -180,6 +193,19 @@ def skew_extract(flags_obj, skew_record, frac):
     print('split time: {:.2f} s'.format(split_time))
 
     return skew_train_record, skew_test_record
+
+
+def skew_extract_v2(flags_obj, skew_record, frac):
+
+    start_time = time.time()
+
+    splitter = SPLITTER.TemporalSplitter(flags_obj, skew_record)
+    skew_train_record, skew_val_record, skew_test_record = splitter.split(skew_record, frac)
+
+    split_time = time.time() - start_time
+    print('split time: {:.2f} s'.format(split_time))
+
+    return skew_train_record, skew_val_record, skew_test_record
 
 
 def save_csv_record(flags_obj, record, train_record, val_record, test_record, train_skew_record=None):
