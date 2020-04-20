@@ -167,10 +167,12 @@ class TemporalSplitter(PercentageSplitter):
     def split_3(self, record, splits):
 
         record = self.rank(record)
+        record_cp = record.copy()
+        record_cp['rank'] = record_cp.groupby('uid')['rank'].transform(np.random.permutation)
 
-        self.late_record = record[record['rank'] <= splits[2]]
-        self.early_record = record[record['rank'] >= splits[1] + splits[2]]
-        self.middle_record = record[(record['rank'] < splits[1] + splits[2]) & (record['rank'] > splits[2])]
+        self.late_record = record_cp[record_cp['rank'] <= splits[2]]
+        self.early_record = record_cp[record_cp['rank'] >= splits[1] + splits[2]]
+        self.middle_record = record_cp[(record_cp['rank'] < splits[1] + splits[2]) & (record_cp['rank'] > splits[2])]
 
         self.drop_rank_and_reset_index_3()
 
