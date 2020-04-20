@@ -82,7 +82,7 @@ class SkewSplitter(PercentageSplitter):
 
         super(SkewSplitter, self).__init__(flags_obj, record)
 
-    def split(self, record, splits, cap=None):
+    def split_3(self, record, splits, cap=None):
 
         popularity = record[['iid', 'uid']].groupby('iid').count().reset_index().rename(columns={'uid': 'pop'})
         record = record.merge(popularity, on='iid')
@@ -102,15 +102,49 @@ class SkewSplitter(PercentageSplitter):
         self.train_record = train_val_record[train_val_record['rank'] >= splits[1]/(splits[0]+splits[1])]
         self.val_record = train_val_record[train_val_record['rank'] < splits[1]/(splits[0]+splits[1])]
 
-        self.drop_and_reset_index()
+        self.drop_and_reset_index_3()
 
         return self.train_record, self.val_record, self.test_record
 
-    def drop_and_reset_index(self):
+    def split_2(self, record, splits, cap=None):
+
+        popularity = record[['iid', 'uid']].groupby('iid').count().reset_index().rename(columns={'uid': 'pop'})
+        record = record.merge(popularity, on='iid')
+        record['pop'] = record['pop'].apply(lambda x : 1/x)
+
+        if cap is not None:
+            pop = record['pop'].to_numpy()
+            pop = np.unique(pop)
+            cap_threshold = np.percentile(pop, cap)
+            record['pop'] = record['pop'].apply(lambda x : min(x, cap_threshold))
+
+        self.val_test_record = record.groupby('uid').apply(pd.DataFrame.sample, frac=splits[1], weights='pop').reset_index(drop=True)
+
+        train_record = pd.concat([record, self.val_test_record]).drop_duplicates(keep=False).reset_index(drop=True)
+
+        self.train_record = train_record
+
+        self.drop_and_reset_index_2()
+
+        return self.train_record, self.val_test_record
+
+    def split(self, record, splits, cap=None):
+
+        if len(splits) == 3:
+            return self.split_3(record, splits, cap)
+        elif len(splits) == 2:
+            return self.split_2(record, splits, cap)
+
+    def drop_and_reset_index_3(self):
 
         self.train_record = self.train_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
         self.val_record = self.val_record.drop(columns=['rank', 'pop']).reset_index(drop=True)
         self.test_record = self.test_record.drop(columns=['pop']).reset_index(drop=True) 
+
+    def drop_and_reset_index_2(self):
+
+        self.train_record = self.train_record.drop(columns=['pop']).reset_index(drop=True)
+        self.val_test_record = self.val_test_record.drop(columns=['pop']).reset_index(drop=True) 
 
 
 class TemporalSplitter(PercentageSplitter):
@@ -119,18 +153,43 @@ class TemporalSplitter(PercentageSplitter):
 
         self.name = flags_obj.name + '_temporal_splitter' 
 
-    def split(self, record, splits):
+    def split_2(self, record, splits):
 
         record = self.rank(record)
 
         self.early_record = record[record['rank'] >= splits[1]]
         self.late_record = record[record['rank'] < splits[1]]
 
-        self.drop_rank_and_reset_index()
+        self.drop_rank_and_reset_index_2()
 
         return self.early_record, self.late_record
 
-    def drop_rank_and_reset_index(self):
+    def split_3(self, record, splits):
+
+        record = self.rank(record)
+
+        self.late_record = record[record['rank'] <= splits[2]]
+        self.early_record = record[record['rank'] >= splits[1] + splits[2]]
+        self.middle_record = record[(record['rank'] < splits[1] + splits[2]) & (record['rank'] > splits[2])]
+
+        self.drop_rank_and_reset_index_3()
+
+        return self.early_record, self.middle_record, self.late_record
+
+    def split(self, record, splits):
+
+        if len(splits) == 2:
+            return self.split_2(record, splits)
+        elif len(splits) == 3:
+            return self.split_3(record, splits)
+
+    def drop_rank_and_reset_index_2(self):
 
         self.early_record = self.early_record.drop(columns=['rank']).reset_index(drop=True)
+        self.late_record = self.late_record.drop(columns=['rank']).reset_index(drop=True)
+
+    def drop_rank_and_reset_index_3(self):
+
+        self.early_record = self.early_record.drop(columns=['rank']).reset_index(drop=True)
+        self.middle_record = self.middle_record.drop(columns=['rank']).reset_index(drop=True)
         self.late_record = self.late_record.drop(columns=['rank']).reset_index(drop=True)
