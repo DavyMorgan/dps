@@ -66,6 +66,19 @@ def downsample_user(flags_obj, record, frac):
     return record
 
 
+def downsample_item(flags_obj, record, frac):
+
+    start_time = time.time()
+
+    downsampler = DOWNSAMPLER.DownSampler(flags_obj)
+    record = downsampler.downsample_item(record, frac=frac)
+
+    downsample_item_time = time.time() - start_time
+    print('downsample item time: {:.2f} s'.format(downsample_item_time))
+
+    return record
+
+
 def filter_cf(flags_obj, record, k_core):
 
     start_time = time.time()
