@@ -40,6 +40,19 @@ def load_csv(flags_obj, filename, **kwargs):
     return record
 
 
+def load_coo(flags_obj, filename, **kwargs):
+
+    start_time = time.time()
+
+    loader = LOADER.CooLoader(flags_obj)
+    record = loader.load(filename, **kwargs)
+
+    load_time = time.time() - start_time
+    print('load time: {:.2f} s'.format(load_time))
+
+    return record
+
+
 def filter_duplication(flags_obj, record):
 
     start_time = time.time()
@@ -341,7 +354,7 @@ def compute_popularity(flags_obj, coo_record, filename=None):
     print('compute and save popularity time: {:.2f} s'.format(compute_time))
 
 
-def generate_graph(flags_obj, train_coo_record):
+def generate_graph(flags_obj, train_coo_record, filename='train_coo_adj_graph.npz'):
 
     start_time = time.time()
 
@@ -349,7 +362,7 @@ def generate_graph(flags_obj, train_coo_record):
     train_coo_adj_graph = grapher.generate_coo_adj_graph(train_coo_record)
 
     saver =SAVER.CooSaver(flags_obj)
-    saver.save('train_coo_adj_graph.npz', train_coo_adj_graph)
+    saver.save(filename, train_coo_adj_graph)
 
     generate_time = time.time() - start_time
     print('generate adj time: {:.2f} s'.format(generate_time))
