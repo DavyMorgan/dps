@@ -76,6 +76,29 @@ class PercentageSplitter(Splitter):
         return record
 
 
+class RandomSplitter(Splitter):
+
+    def __init__(self, flags_obj, record):
+
+        super(RandomSplitter, self).__init__(flags_obj, record)
+
+    def split(self, record, splits):
+
+        num_record = len(record)
+        splits = np.array(splits)
+        splits = (num_record*splits).astype(np.int32)
+
+        results = []
+        for n in splits[:-1]:
+            sampled_record = record.sample(n=n, random_state=np.random.RandomState()).reset_index(drop=True)
+            results.append(sampled_record)
+            record = pd.concat([record, sampled_record]).drop_duplicates(keep=False).reset_index(drop=True)
+
+        results.append(record)
+
+        return results
+
+
 class SkewSplitter(PercentageSplitter):
 
     def __init__(self, flags_obj, record):
@@ -134,6 +157,28 @@ class SkewSplitter(PercentageSplitter):
             return self.split_3(record, splits, cap)
         elif len(splits) == 2:
             return self.split_2(record, splits, cap)
+
+    def unbiased_split(self, record, splits, cap=None):
+
+        popularity = record[['iid', 'uid']].groupby('iid').count().reset_index().rename(columns={'uid': 'pop'})
+        record = record.merge(popularity, on='iid')
+        record['pop'] = record['pop'].apply(lambda x : 1/x)
+
+        if cap is not None:
+            pop = record['pop'].to_numpy()
+            pop = np.unique(pop)
+            cap_threshold = np.percentile(pop, cap)
+            record['pop'] = record['pop'].apply(lambda x : min(x, cap_threshold))
+
+        self.val_test_record = record.sample(frac=splits[1], weights='pop', random_state=np.random.RandomState()).reset_index(drop=True)
+
+        train_record = pd.concat([record, self.val_test_record]).drop_duplicates(keep=False).reset_index(drop=True)
+
+        self.train_record = train_record
+
+        self.drop_and_reset_index_2()
+
+        return self.train_record, self.val_test_record
 
     def drop_and_reset_index_3(self):
 
