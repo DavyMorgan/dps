@@ -32,7 +32,9 @@ DuplicationFilter: filter duplicated records with the earliest record left
 Reindexer: reindex uid and iid, start from 0
 ### splitter
 AbsoluteSplitter: split the dataset with test and validation sample number fixed  
-PercentageSplitter: split the dataset proportionally in chronological order
+PercentageSplitter: split the dataset proportionally in chronological order  
+RandomSplitter: split the dataset randomly  
+SkewSplitter: split the dataset into biased and unbiased parts according to related literatures ([PF](https://dawenl.github.io/publications/LiangCB16-causalrec.pdf), [CausE](https://arxiv.org/pdf/1706.07639.pdf), [DICE](https://arxiv.org/pdf/2006.11011.pdf)).  
 ### generator
 CooGenerator: generate sparse matrix in coordinate format  
 LilGenerator: generate sparse matrix in lists in list format  
